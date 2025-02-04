@@ -4,30 +4,32 @@
 #include <stdlib.h>
 #include <assert.h>
 #include <verilated_vcd_c.h>
+static TOP_NAME dut;
+
+void nvboard_bind_all_pins(TOP_NAME* top);
+
+static void single_cycle() {
+  dut.clk = 0; dut.eval();
+  dut.clk = 1; dut.eval();
+}
+
+static void reset(int n) {
+  dut.rst = 1;
+  while (n -- > 0) single_cycle();
+  dut.rst = 0;
+}
 int main(int argc, char** argv) {
-	Verilated::commandArgs(argc,argv);
-    VerilatedContext* contextp = new VerilatedContext;
-    //contextp->commandArgs(argc, argv);
-    Vtop* top = new Vtop{contextp};
-    VerilatedVcdC* tfp = new VerilatedVcdC;
-    contextp->traceEverOn(true);
-    top->trace(tfp,99);
-    tfp->open("wave.vcd");
-    int i=10;
-    while (i--) {
-      int a = rand() & 1;
-      int b = rand() & 1;
-      top->a = a;
-      top->b = b;
-      top->eval();
-      printf("a = %d, b = %d, f = %d\n", a, b, top->f);
-      assert(top->f == (a ^ b));
-      tfp->dump(contextp->time());
-      contextp->timeInc(1);
+	nvboard_bind_pin( &dut->sw, 8, SW7, SW6, SW5, SW4, SW3, SW2, SW1, SW0);
+  nvboard_bind_pin( &top->ledr, 16, LD15, LD14, LD13, LD12, LD11, LD10, LD9, LD8, LD7, LD6, LD5, LD4, LD3, LD2, LD1, LD0);
+  nvboard_init();
+
+  reset(10);
+
+    while (true) {
+    nvboard_update();
+    single_cycle();
     }
-    delete top;
-    delete contextp;
-    tfp->close();
+
     return 0;
 }
 
