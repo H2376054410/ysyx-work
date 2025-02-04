@@ -10,6 +10,7 @@ sim:
 # 正确的目标调用函数
 rtl:
 	$(call git_commit, "sim RTL") # DO NOT REMOVE THIS LINE!!!
+	$(call git_soft_checkout) 
 	@echo "what happened"
 include ../Makefile
 
