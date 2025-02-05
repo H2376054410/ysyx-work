@@ -49,14 +49,9 @@ clean:
 
 .PHONY: default all clean run
 
-sim:
-	$(BIN)
-	@$^
-	$(call git_commit, "接入NVBOARD") # DO NOT REMOVE THIS LINE!!!
-	@echo "Write this Makefile by yourself."
 # 正确的目标调用函数
-rtl:
-	$(call git_commit, "insert the picture") # DO NOT REMOVE THIS LINE!!!
+sim:
+	$(call git_commit, "2选1多路选择器") # DO NOT REMOVE THIS LINE!!!
 	@echo "what happened"
 include ../Makefile
 
