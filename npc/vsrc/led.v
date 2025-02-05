@@ -15,21 +15,25 @@ module led(
   //     count <= (count >= 5000000 ? 32'b0 : count + 1);
   //   end
   // end
-  //4-1优先编码器
-  //led[1:0]为信号输出端，0123为信号输入,
-  wire [1:0]choose;
-  wire [3:0]data;
+  //8-3优先编码器
+  //led[3:0]为信号输出端，012为信号输出,3为标志位，有1则亮，否则灭
+  //首先保证高位的优先级要大于低位的，所以是i从大变小检测，然后因为得到的i就是位的值，所以只需将i输出即可
+  wire [2:0]choose;
+  wire [7:0]data;
+  reg flag;
   integer i;
-  assign data=sw[3:0];
+  assign data=sw[7:0];
   always @(data) begin
-    choose[1:0]=2'b00;
-    for(i=0;i<4;i=i+1)begin
+    choose[2:0]=3'b000;
+    flag=0;
+    for(i=7;i>-1;i=i-1)begin
       if(data[i]==1)begin
-        choose[1:0]=i[1:0];
-        i=4;
+        choose[2:0]=i[2:0];
+        flag=1;
+        i=-1;
       end
     end
-  r_led[1:0]=choose[1:0];    
+  r_led[3:0]={flag,choose[2:0]};    
   end
   assign ledr = {8'b11111111,r_led};
 endmodule

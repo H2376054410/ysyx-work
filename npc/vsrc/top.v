@@ -24,7 +24,8 @@ module top(
     output [7:0] seg6,
     output [7:0] seg7
 );
-
+wire [15:0]data;
+assign data=ledr;
 led my_led(
     .clk(clk),
     .rst(rst),
@@ -63,6 +64,7 @@ ps2_keyboard my_keyboard(
 seg my_seg(
     .clk(clk),
     .rst(rst),
+    .data(data),
     .o_seg0(seg0),
     .o_seg1(seg1),
     .o_seg2(seg2),
