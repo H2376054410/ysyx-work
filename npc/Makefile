@@ -56,7 +56,7 @@ sim:
 	@echo "Write this Makefile by yourself."
 # 正确的目标调用函数
 rtl:
-	$(call git_commit, "接入NVBOARD") # DO NOT REMOVE THIS LINE!!!
+	$(call git_commit, "流水灯实例") # DO NOT REMOVE THIS LINE!!!
 	@echo "what happened"
 include ../Makefile
 
