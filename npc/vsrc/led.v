@@ -15,35 +15,20 @@ module led(
   //     count <= (count >= 5000000 ? 32'b0 : count + 1);
   //   end
   // end
-  //4-2编码器
+  //4-1优先编码器
   //led[1:0]为信号输出端，0123为信号输入,
   wire [1:0]choose;
   wire [3:0]data;
+  integer i;
   assign data=sw[3:0];
-  always @(*) begin
-    case(data)
-    4'b0001:begin
-      choose[0]=0;
-      choose[1]=0;
-          end
-    4'b0010:begin
-      choose[0]=1;
-      choose[1]=0;
-          end
-    4'b0100:begin
-      choose[0]=0;
-      choose[1]=1;
-          end
-    4'b1000:begin
-      choose[0]=1;
-      choose[1]=1;
-          end
-    default:begin
-      choose[0]=0;
-      choose[1]=0;      
+  always @(data) begin
+    choose[1:0]=2'b00;
+    for(i=0;i<4;i=i+1)begin
+      if(data[i]==1)begin
+        choose[1:0]=i[1:0];
+        i=4;
+      end
     end
-
-  endcase
   r_led[1:0]=choose[1:0];    
   end
   assign ledr = {8'b11111111,r_led};
