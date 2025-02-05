@@ -51,7 +51,7 @@ clean:
 
 # 正确的目标调用函数
 sim:
-	$(call git_commit, "2选1多路选择器") # DO NOT REMOVE THIS LINE!!!
+	$(call git_commit, "4选1多路选择器") # DO NOT REMOVE THIS LINE!!!
 	@echo "what happened"
 include ../Makefile
 

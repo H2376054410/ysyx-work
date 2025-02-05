@@ -15,9 +15,13 @@ module led(
   //     count <= (count >= 5000000 ? 32'b0 : count + 1);
   //   end
   // end
-  //0和1为信号输入端，2为信号选择端，输出信号为led[0]
+  //0123为信号输入端，45为信号选择端，输出信号为led[0]
+  wire [1:0]choose;
+  wire [3:0]data;
+  assign choose=sw[5:4];
+  assign data=sw[3:0];
   always @(*) begin
-    led[0]=sw[2]==0?sw[0]:sw[1];
+    led[0]=data[choose];
   end
   assign ledr = led;
 endmodule
