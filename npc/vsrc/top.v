@@ -69,6 +69,7 @@ seg my_seg(
     .clk(clk),
     .rst(rst),
     .data(data),
+    .btn(btn),
     .o_seg0(seg0),
     .o_seg1(seg1),
     .o_seg2(seg2),

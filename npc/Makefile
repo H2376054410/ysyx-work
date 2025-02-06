@@ -51,7 +51,7 @@ clean:
 
 # 正确的目标调用函数
 sim:
-	$(call git_commit, "优化控制信号部分alu") # DO NOT REMOVE THIS LINE!!!
+	$(call git_commit, "移位寄存器") # DO NOT REMOVE THIS LINE!!!
 	@echo "what happened"
 include ../Makefile
 
