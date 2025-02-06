@@ -113,15 +113,19 @@ module ALU(
 reg [2:0]option;
 reg reset;
     always @(*) begin
-        case (op)
+        if(rst==1)
+        begin
+            option=3'b000;
+        end
+        else begin
+         case (op)
             3'b001:option[0]=1;
             3'b010:option[1]=1;
             3'b100:option[2]=1;
             default: ;
-        endcase
-    end
-    always @(rst) begin
-        option=3'b000;
+        endcase           
+        end
+
     end
     wire [4:0] extended_A;
     wire [4:0] extended_B;
