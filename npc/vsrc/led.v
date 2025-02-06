@@ -8,13 +8,6 @@ module led(
   reg [31:0] count;
   reg [15:0] led;
   reg [7:0] r_led;
-  // always @(posedge clk) begin
-  //   if (rst) begin led <= 1; count <= 0; end
-  //   else begin
-  //     if (count == 0) led <= {led[14:0], led[15]};
-  //     count <= (count >= 5000000 ? 32'b0 : count + 1);
-  //   end
-  // end
   //8-3优先编码器
   //led[3:0]为信号输出端，012为信号输出,3为标志位，有1则亮，否则灭
   //首先保证高位的优先级要大于低位的，所以是i从大变小检测，然后因为得到的i就是位的值，所以只需将i输出即可
@@ -35,5 +28,6 @@ module led(
     end
   r_led[3:0]={flag,choose[2:0]};    
   end
-  assign ledr = {8'b11111111,r_led};
+  assign ledr = {3'b111,btn[4:0],r_led};
+  //assign ledr = {led[7:5], led[4:0] ^ btn, sw};
 endmodule

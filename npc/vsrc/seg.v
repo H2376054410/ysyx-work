@@ -11,9 +11,8 @@ module seg(
   output [7:0] o_seg6,
   output [7:0] o_seg7
 );
-wire [3:0]ddata;
-assign ddata=data[3:0];
-reg [3:0]ddata_reg;
+//data[3:0]is out
+//data[6:4]is flag
 wire [7:0] segs [7:0];
 assign segs[0] = 8'b11111101;//the first one,right
 assign segs[1] = 8'b01100000;
@@ -28,7 +27,6 @@ parameter CLK_NUM = 5000000;
 
 reg [31:0] count;
 reg [2:0] offset;
-reg [7:0] oo_seg6;
 // always @(posedge clk) begin
 //   if(rst) begin count <= 0; offset <= 0; end
 //   else begin
@@ -36,32 +34,15 @@ reg [7:0] oo_seg6;
 //     count <= (count == CLK_NUM) ? 0 : count + 1;
 //   end
 // end
-always @(ddata) begin
-  ddata_reg=ddata;
-  // if(ddata[3]==1)begin
-  //   o_seg7 = ~segs[3'd1];
-  // end
-  // else begin
-  //   o_seg7 = ~segs[3'd0];    
-  // end
-  oo_seg6=~segs[ddata_reg[2:0]];
-end
-// assign o_seg0 = ~segs[3'd0];
-// assign o_seg1 = ~segs[3'd1];
-// assign o_seg2 = ~segs[3'd2];
-// assign o_seg3 = ~segs[3'd3];
-// assign o_seg4 = ~segs[3'd4];
-// assign o_seg5 = ~segs[3'd5];
-// assign o_seg6 = ~segs[3'd6];
-// assign o_seg7 = ~segs[3'd7];
 
-assign o_seg0 = 8'b11111111;
-assign o_seg1 = 8'b11111111;
-assign o_seg2 = 8'b11111111;
-assign o_seg3 = 8'b11111111;
-assign o_seg4 = 8'b11111111;
-assign o_seg5 = 8'b11111111;
-assign o_seg6 = oo_seg6;
+assign o_seg0 = ~segs[{1'b0,1'b0,data[0]}];
+assign o_seg1 = ~segs[{1'b0,1'b0,data[1]}];
+assign o_seg2 = ~segs[{1'b0,1'b0,data[2]}];
+assign o_seg3 = ~segs[{1'b0,1'b0,data[3]}];
+assign o_seg4 = ~segs[{1'b0,1'b0,data[4]}];
+assign o_seg5 = ~segs[{1'b0,1'b0,data[5]}];
+assign o_seg6 = ~segs[{1'b0,1'b0,data[6]}];
 assign o_seg7 = 8'b11111111;
+
 
 endmodule

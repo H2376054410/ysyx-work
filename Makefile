@@ -6,7 +6,7 @@ STUNAME = 郝伟翔
 TRACER = tracer-ysyx
 GITFLAGS = -q --author='$(TRACER) <tracer@ysyx.org>' --no-verify --allow-empty
 export NEMU_HOME=/home/hwx/ysyx-workbench/nemu
-YSYX_HOME = $(shell realpath $(NEMU_HOME)/..)
+YSYX_HOME = $(NEMU_HOME)/..
 WORK_BRANCH = $(shell git rev-parse --abbrev-ref HEAD)
 WORK_INDEX = $(YSYX_HOME)/.git/index.$(WORK_BRANCH)
 TRACER_BRANCH = $(TRACER)
