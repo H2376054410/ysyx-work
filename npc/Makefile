@@ -51,7 +51,7 @@ clean:
 
 # 正确的目标调用函数
 sim:
-	$(call git_commit, "七段数码管+8-3优先级编码器") # DO NOT REMOVE THIS LINE!!!
+	$(call git_commit, "alu and 数码管") # DO NOT REMOVE THIS LINE!!!
 	@echo "what happened"
 include ../Makefile
 
