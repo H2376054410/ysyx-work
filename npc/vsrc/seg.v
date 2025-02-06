@@ -46,6 +46,7 @@ reg [2:0] offset;
 //     count <= (count == CLK_NUM) ? 0 : count + 1;
 //   end
 // end
+//伪随机数生成部分
 always @(btn) begin
   if(btn==0)
   b_out={(b_out[0]^b_out[4]^b_out[3]^b_out[2]),b_out[7:1]};
