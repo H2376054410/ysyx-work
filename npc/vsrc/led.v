@@ -14,6 +14,6 @@ always @(btn[0]) begin
   end
 end
   assign r_led=(fsm_out==4'b1111)?1:0;
-  assign ledr = {11'b0000000000,fsm_out[3:0],r_led};
+  assign ledr = {8'b0000000,fsm_out[3:0],3'b000,r_led};
   //assign ledr = {led[7:5], led[4:0] ^ btn, sw};
 endmodule
