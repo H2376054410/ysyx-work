@@ -51,7 +51,7 @@ clean:
 
 # 正确的目标调用函数
 sim:
-	$(call git_commit, "输出改为led7to4") # DO NOT REMOVE THIS LINE!!!
-	@echo "what happened"
+	$(call git_commit, "含有九个状态的状态机") # DO NOT REMOVE THIS LINE!!!
+	@echo "commit happened"
 include ../Makefile
 
