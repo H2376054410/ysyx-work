@@ -7,6 +7,7 @@ module ps2_keyboard(clk,resetn,ps2_clk,ps2_data,putdown,ps2_out,ps2_scanout);
     reg [9:0] buffer;        // ps2_data bits
     reg [3:0] count;  // count ps2_data bits
     reg [2:0] ps2_clk_sync;
+    reg [7:0] lastlastscanout;
     reg startconvert;
     initial begin
       reg_ps2out=8'b0;
@@ -30,13 +31,20 @@ module ps2_keyboard(clk,resetn,ps2_clk,ps2_data,putdown,ps2_out,ps2_scanout);
                 if ((buffer[0] == 0) &&  // start bit
                     (ps2_data)       &&  // stop bit
                     (^buffer[9:1])) begin      // odd  parity
+                    lastlastscanout=regps2_lastscanout;
                     regps2_lastscanout=reg_ps2scanout;
                     reg_ps2scanout=buffer[8:1];
-                    ps2_out=reg_ps2out;
+                    ps2_out=reg_ps2out;//dont change
                     ps2_scanout=reg_ps2scanout;
                     ps2_lastscanout=regps2_lastscanout;
                     startconvert=1;
-                    putdown=1;
+                    if (lastlastscanout==8'hf0&&regps2_lastscanout==reg_ps2scanout) begin
+                    putdown=1;                        
+                    end
+                    else begin
+                        putdown=0;
+                    end
+
                     // $display("ps2_scanout %x", ps2_scanout[7:0]);
                     // $display("ps2_lastscanout %x", ps2_lastscanout[7:0]);
                     // $display("reg_ps2scanout %x", reg_ps2scanout[7:0]);

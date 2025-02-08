@@ -51,7 +51,7 @@ clean:
 
 # 正确的目标调用函数
 sim:
-	$(call git_commit, "键盘ps/2and show in seg") # DO NOT REMOVE THIS LINE!!!
+	$(call git_commit, "计数调整") # DO NOT REMOVE THIS LINE!!!
 	@echo "commit happened"
 include ../Makefile
 

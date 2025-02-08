@@ -37,20 +37,37 @@ initial begin
 lastis=0;
 end
 reg [7:0]count;
+reg [7:0]lastdata;
+reg datasame;
+initial begin
+  datasame=0;
+  lastdata=0;
+end
 always @(data[7:0] or btn) begin
+
+  if (lastdata==data[7:0]) begin
+      datasame=1;
+  end
+  else begin
+      datasame=0;
+  end
   if(count<8'hff)
-  count=count+1;
+  begin
+  if (btn||(data[7:0]!=8'hf0&&lastdata==8'hf0)) begin
+  count=count+1;      
+  end
+  end
   else
   begin
    count=0;   
   end
-  $display("count is %d data is %x",count[7:0],data[7:0]);
+  $display("count:%d lastdata is %x data is %x btn is %d",count[7:0],lastdata[7:0],data[7:0],btn);
 
 
 if(data[7:0]!=8'hF0)begin
 
   if(lastis==1)begin
-      $display("last is f0");
+      // $display("last is f0");
       oo_segs[0]=8'b11111111;
       oo_segs[1]=8'b11111111;
       oo_segs[2]=8'b11111111;
@@ -74,7 +91,7 @@ if(data[7:0]!=8'hF0)begin
     end
 end 
 else begin
-         $display("this is f0");
+        //  $display("this is f0");
   oo_segs[0]=8'b11111111;
   oo_segs[1]=8'b11111111;
   oo_segs[2]=8'b11111111;
@@ -85,6 +102,7 @@ else begin
   oo_segs[7]= 8'b11111111;
   lastis=1;
 end
+  lastdata=data[7:0];
 end
 assign o_seg0 = oo_segs[0];
 assign o_seg1 = oo_segs[1];
