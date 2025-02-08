@@ -2,7 +2,7 @@ module seg(
   input clk,
   input rst,
   input [15:0] data,
-  input [4:0] btn,
+  input  btn,
   output [7:0] o_seg0,
   output [7:0] o_seg1,
   output [7:0] o_seg2,
@@ -12,13 +12,9 @@ module seg(
   output [7:0] o_seg6,
   output [7:0] o_seg7
 );
-//data[3:0]is out
-//data[6:4]is flag
-reg [7:0]b_out;
-initial begin
-  b_out[7:0]=8'b10000000;
-end
+
 wire [7:0] segs [15:0];
+reg [7:0] oo_segs[7:0];
 assign segs[0] = 8'b11111101;//the first one,right，zero is noshine
 assign segs[1] = 8'b01100000;
 assign segs[2] = 8'b11011010;
@@ -36,28 +32,67 @@ assign segs[13] = 8'b01111010;
 assign segs[14] = 8'b10011110;
 assign segs[15] = 8'b10001110;
 parameter CLK_NUM = 5000000;
-
-reg [31:0] count;
-reg [2:0] offset;
-// always @(posedge clk) begin
-//   if(rst) begin count <= 0; offset <= 0; end
-//   else begin
-//     if(count == CLK_NUM) begin offset <= offset + 1; end
-//     count <= (count == CLK_NUM) ? 0 : count + 1;
-//   end
-// end
-//伪随机数生成部分
-always @(btn) begin
-  if(btn==0)
-  b_out={(b_out[0]^b_out[4]^b_out[3]^b_out[2]),b_out[7:1]};
+reg lastis;
+initial begin
+lastis=0;
 end
-assign o_seg0 = 8'b11111111;
-assign o_seg1 = ~segs[b_out[3:0]];
-assign o_seg2 = ~segs[b_out[7:4]];
-assign o_seg3 = 8'b11111111;
+reg [7:0]count;
+always @(data[7:0] or btn) begin
+  if(count<8'hff)
+  count=count+1;
+  else
+  begin
+   count=0;   
+  end
+  $display("count is %d data is %x",count[7:0],data[7:0]);
+
+
+if(data[7:0]!=8'hF0)begin
+
+  if(lastis==1)begin
+      $display("last is f0");
+      oo_segs[0]=8'b11111111;
+      oo_segs[1]=8'b11111111;
+      oo_segs[2]=8'b11111111;
+      oo_segs[3]=8'b11111111;
+      oo_segs[4]=8'b11111111;
+      oo_segs[5]=~segs[count[3:0]];
+      oo_segs[6]=~segs[count[7:4]];  
+      oo_segs[7]= 8'b11111111;
+      lastis=0;     
+  end
+      else begin
+
+        oo_segs[0]=~segs[data[3:0]];
+        oo_segs[1]=~segs[data[7:4]];
+        oo_segs[2]=~segs[data[11:8]];
+        oo_segs[3]=~segs[data[15:12]];
+        oo_segs[4]=8'b11111111;
+        oo_segs[5]=~segs[count[3:0]];
+        oo_segs[6]=~segs[count[7:4]]; 
+        oo_segs[7]= 8'b11111111;       
+    end
+end 
+else begin
+         $display("this is f0");
+  oo_segs[0]=8'b11111111;
+  oo_segs[1]=8'b11111111;
+  oo_segs[2]=8'b11111111;
+  oo_segs[3]=8'b11111111;
+  oo_segs[4]=8'b11111111;
+  oo_segs[5]=~segs[count[3:0]];
+  oo_segs[6]=~segs[count[7:4]];  
+  oo_segs[7]= 8'b11111111;
+  lastis=1;
+end
+end
+assign o_seg0 = oo_segs[0];
+assign o_seg1 = oo_segs[1];
+assign o_seg2 = oo_segs[2];
+assign o_seg3 = oo_segs[3];
 assign o_seg4 = 8'b11111111;
-assign o_seg5 = 8'b11111111;
-assign o_seg6 = 8'b11111111;
+assign o_seg5 = oo_segs[5];
+assign o_seg6 = oo_segs[6];
 assign o_seg7 = 8'b11111111;
 
 

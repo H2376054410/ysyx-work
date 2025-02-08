@@ -24,12 +24,13 @@ module top(
     output [7:0] seg6,
     output [7:0] seg7
 );
+reg putdown;
 wire [15:0]data;
 wire [3:0]alu_out;
 wire [2:0]alu_flag;
-assign data[15:7]=9'b111111111;
-assign data[6:4]=alu_flag[2:0];
-assign data[3:0]=alu_out[3:0];
+reg [7:0] ps2_out,ps2_scanout; 
+assign data[7:0]=ps2_scanout;
+assign data[15:8]=ps2_out;
 led my_led(
     .clk(clk),
     .rst(rst),
@@ -62,14 +63,19 @@ ps2_keyboard my_keyboard(
     .clk(clk),
     .resetn(~rst),
     .ps2_clk(ps2_clk),
-    .ps2_data(ps2_data)
+    .ps2_data(ps2_data),
+    .ps2_out(ps2_out),
+    .ps2_scanout(ps2_scanout),
+    .putdown(putdown)
 );
-
+// always @(data) begin
+//     $display("high %x low %x ", data[15:8],data[7:0]);
+// end
 seg my_seg(
     .clk(clk),
     .rst(rst),
     .data(data),
-    .btn(btn),
+    .btn(putdown),
     .o_seg0(seg0),
     .o_seg1(seg1),
     .o_seg2(seg2),

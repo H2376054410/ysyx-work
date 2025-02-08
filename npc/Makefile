@@ -51,7 +51,7 @@ clean:
 
 # 正确的目标调用函数
 sim:
-	$(call git_commit, "含有九个状态的状态机") # DO NOT REMOVE THIS LINE!!!
+	$(call git_commit, "键盘ps/2and show in seg") # DO NOT REMOVE THIS LINE!!!
 	@echo "commit happened"
 include ../Makefile
 
