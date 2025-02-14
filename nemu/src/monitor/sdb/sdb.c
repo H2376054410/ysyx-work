@@ -18,7 +18,7 @@
 #include <readline/readline.h>
 #include <readline/history.h>
 #include "sdb.h"
-
+#include <memory/paddr.h>
 static int is_batch_mode = false;
 
 void init_regex();
@@ -49,11 +49,14 @@ static int cmd_c(char *args) {
 
 
 static int cmd_q(char *args) {
+  cpu_exec(1);
   return -1;
 }
 
 static int cmd_help(char *args);
-
+static int cmd_si(char *args);
+static int cmd_info(char *args);
+static int cmd_expr(char *args);
 static struct {
   const char *name;
   const char *description;
@@ -62,12 +65,66 @@ static struct {
   { "help", "Display information about all supported commands", cmd_help },
   { "c", "Continue the execution of the program", cmd_c },
   { "q", "Exit NEMU", cmd_q },
-
+  { "si", "single step execution", cmd_si },
+  { "info", "print program status", cmd_info },
+  { "x", "print memory data", cmd_expr },
   /* TODO: Add more commands */
 
 };
 
 #define NR_CMD ARRLEN(cmd_table)
+static int cmd_expr(char *args)
+{
+  word_t mem=0;
+  int memory_size=0;
+  int memory_extern=0;
+
+
+  char *arg = strtok(NULL, " ");  
+  assert(arg!=NULL);
+  memory_size=atoi(arg);
+  
+  
+  arg = strtok(NULL, " ");  
+  assert(arg!=NULL);
+  memory_extern=strtol(arg,NULL,16);
+  printf("1:%x 2:%x\n",memory_extern,memory_size);
+  for(int i=0;i<memory_size;i++)
+  {
+  mem=paddr_read((paddr_t)(memory_extern+i*4),4);
+  printf("the memory data is %x\n",mem);    
+  }
+
+  return 0;
+}
+static int cmd_info(char *args)
+{
+  char *arg = strtok(NULL, " ");  
+  if(*arg=='r')
+  {
+  printf("into the reg display\n");
+  isa_reg_display();
+  }
+
+  return 0;
+}
+static int cmd_si(char *args)
+{
+
+  int num=0;
+  char *arg = strtok(NULL, " ");
+    num=atoi(arg);
+    if(num !=0)
+    {
+    printf("-----\n");
+    printf("Integer: %d\n", num);
+    cpu_exec(num);  
+    }
+    else{
+      printf("please input the execution time\n");
+    }
+   return 0;
+}
 
 static int cmd_help(char *args) {
   /* extract the first argument */
@@ -137,7 +194,8 @@ void sdb_mainloop() {
 void init_sdb() {
   /* Compile the regular expressions. */
   init_regex();
-
+    printf("init_regex is successful\n");
   /* Initialize the watchpoint pool. */
   init_wp_pool();
+    printf("init_wp_pool is successful\n");  
 }
