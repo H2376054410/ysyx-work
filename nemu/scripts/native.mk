@@ -19,7 +19,7 @@ include $(NEMU_HOME)/scripts/build.mk
 include $(NEMU_HOME)/tools/difftest.mk
 
 compile_git:
-	$(call git_commit, "compile NEMU")
+	$(call git_commit, "complie expression")
 $(BINARY):: compile_git
 
 # Some convenient rules
@@ -34,7 +34,7 @@ NEMU_EXEC := $(BINARY) $(ARGS) $(IMG)
 run-env: $(BINARY) $(DIFF_REF_SO)
 
 run: run-env
-	$(call git_commit, "run NEMU")
+	$(call git_commit, "run expression")
 	$(NEMU_EXEC)
 
 gdb: run-env

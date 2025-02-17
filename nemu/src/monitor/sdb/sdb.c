@@ -49,7 +49,7 @@ static int cmd_c(char *args) {
 
 
 static int cmd_q(char *args) {
-  cpu_exec(1);
+  cpu_exec(-2);
   return -1;
 }
 
@@ -57,6 +57,7 @@ static int cmd_help(char *args);
 static int cmd_si(char *args);
 static int cmd_info(char *args);
 static int cmd_expr(char *args);
+static int cmd_ex(char *args);
 static struct {
   const char *name;
   const char *description;
@@ -68,11 +69,21 @@ static struct {
   { "si", "single step execution", cmd_si },
   { "info", "print program status", cmd_info },
   { "x", "print memory data", cmd_expr },
+  { "p", "get the value", cmd_ex },
   /* TODO: Add more commands */
 
 };
 
 #define NR_CMD ARRLEN(cmd_table)
+bool ex1;
+static int cmd_ex(char *args)
+{ 
+  bool *suc=&ex1;
+  char *arg = strtok(NULL, "");  
+  printf("%s\n",arg);
+  expr(arg,suc);
+  return 0;
+}
 static int cmd_expr(char *args)
 {
   word_t mem=0;
