@@ -161,6 +161,10 @@ static int eval(int p,int q)
   else if (p == q) {
       return atoi(tokens[p].str);
   }
+  else if(q-p==1&&tokens[p].type=='-')
+  {
+      return -atoi(tokens[q].str);
+  }
   else if (check_parentheses(p, q) == true) {
     return eval(p + 1, q - 1);
   }
@@ -204,7 +208,7 @@ static bool check_parentheses(int p, int q) {
     }
     if(tokens[p].type=='('&&tokens[q].type==')')
     {
-    return true; // 括号匹配
+      return true; // 括号匹配
     }
     else
     {
@@ -212,12 +216,13 @@ static bool check_parentheses(int p, int q) {
     }
     
 }
+
 static int find_main_operator(int p,int q)
 {
   //find + and -
     int op_position = -1;
     int parenthesis_level = 0;
-  for(int i=q;i>=p;--i)
+  for(int i=p;i<=q;++i)
   {
     if(tokens[i].type=='(')
     {
@@ -230,7 +235,7 @@ static int find_main_operator(int p,int q)
 
     if(parenthesis_level==0)
     {
-      if(tokens[i].type=='+'||tokens[i].type=='-')
+      if((tokens[i].type=='+'||tokens[i].type=='-')&&i!=0)
       {
       op_position=i;
       break;
@@ -239,7 +244,7 @@ static int find_main_operator(int p,int q)
   }
   if(op_position==-1)
   {
-  for(int i=q;i>=p;--i)
+  for(int i=p;i<=q;++i)
   {
     if(tokens[i].type=='(')
     {
