@@ -19,7 +19,10 @@
 #include <time.h>
 #include <assert.h>
 #include <string.h>
-
+int choose(int a);
+char gen_num();
+char gen_rand_op();
+char gen(char c);
 // this should be enough
 static char buf[65536] = {};
 static char code_buf[65536 + 128] = {}; // a little larger than `buf`
@@ -30,11 +33,49 @@ static char *code_format =
 "  printf(\"%%u\", result); "
 "  return 0; "
 "}";
-
+static char op_station[4]=
+{'+','-','*','/'};
+int i=0;
 static void gen_rand_expr() {
-  buf[0] = '\0';
-}
+  switch (choose(3)) {
+    case 0: 
+      buf[i]=gen_num(); 
+    break;
+    case 1:
+     buf[i]=gen('(');
+     i++; 
+     buf[i]=gen_rand_expr();
+     i++; 
+     buf[i]=gen(')');
+     i++
+      break;
 
+    default: 
+    gen_rand_expr(); 
+    buf[i]=gen_rand_op(); 
+    i++;
+    gen_rand_expr(); 
+    break;
+  }
+}
+int choose(int a)
+{
+  assert(a>0);
+  return (rand()%a);
+}
+char gen_num()
+{
+  return (0x30+(rand()%10));
+}
+char gen_rand_op()
+{
+  int i=rand()%4;
+  return op_station[i];
+}
+char gen(char c)
+{
+  return c;
+}
 int main(int argc, char *argv[]) {
   int seed = time(0);
   srand(seed);
@@ -45,7 +86,6 @@ int main(int argc, char *argv[]) {
   int i;
   for (i = 0; i < loop; i ++) {
     gen_rand_expr();
-
     sprintf(code_buf, code_format, buf);
 
     FILE *fp = fopen("/tmp/.code.c", "w");
