@@ -23,7 +23,7 @@ static int is_batch_mode = false;
 
 void init_regex();
 void init_wp_pool();
-
+int add_watchpoint(char *expr);
 /* We use the `readline' library to provide more flexibility to read from stdin. */
 static char* rl_gets() {
   static char *line_read = NULL;
@@ -58,6 +58,7 @@ static int cmd_si(char *args);
 static int cmd_info(char *args);
 static int cmd_expr(char *args);
 static int cmd_ex(char *args);
+static int cmd_watchpoint(char *args);
 static struct {
   const char *name;
   const char *description;
@@ -70,18 +71,27 @@ static struct {
   { "info", "print program status", cmd_info },
   { "x", "print memory data", cmd_expr },
   { "p", "get the value", cmd_ex },
+  { "w", "get the value", cmd_watchpoint },
   /* TODO: Add more commands */
 
 };
 
 #define NR_CMD ARRLEN(cmd_table)
-bool ex1;
+int watchpoint_num[32];
+int p_watchpoint=0;
+static int cmd_watchpoint(char *args)
+{
+  char *arg = strtok(NULL, "");  
+  watchpoint_num[p_watchpoint]=add_watchpoint(arg);
+  return 0;
+}
 static int cmd_ex(char *args)
 { 
-  bool *suc=&ex1;
+  bool *suc=malloc(sizeof(bool));
   char *arg = strtok(NULL, "");  
   printf("%s\n",arg);
   expr(arg,suc);
+  free(suc);
   return 0;
 }
 static int cmd_expr(char *args)

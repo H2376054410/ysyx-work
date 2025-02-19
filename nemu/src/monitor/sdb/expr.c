@@ -163,8 +163,8 @@ word_t expr(char *e, bool *success) {
   }
   int j=0;
   printf("into the expr\n");
-
-  printf("the answer is %x\n",eval(0,data_len-1));
+  word_t result=eval(0,data_len-1);
+  printf("the answer is %x\n",result);
 
   for(j=0;j<=31;j++)
   {
@@ -172,8 +172,9 @@ word_t expr(char *e, bool *success) {
     strcpy(tokens[j].str, temp);
   }
 
-  return 0;
+  return result;
 }
+
 static int eval(int p,int q)
 {
   if (p > q) {

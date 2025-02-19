@@ -25,7 +25,8 @@ typedef struct watchpoint {
 } WP;
 static WP wp_pool[NR_WP] = {};
 static WP *head = NULL, *free_ = NULL;
-
+WP* new_wp(void);
+void free_wp(WP *wp);
 
 void init_wp_pool() {
   int i;
@@ -37,7 +38,58 @@ void init_wp_pool() {
   head = NULL;
   free_ = wp_pool;
 }
-//new a watchpoint
+void try(void)
+{}
+int add_watchpoint(char *expr)
+{
+    WP* temp=new_wp();//新建一个监视点
+    int num=temp->NO;//得到所分配链表的编号
+    strcpy(temp->expr, expr);//拷贝表达式
+    printf("watchpoint add expr is %s\n",temp->expr);
+    return num;//返回编号
+}
+//更新监视点的值，在cpu-exec中只需要调用即可,如果有改变的话返回1，没有变化的话返回0
+int watchpoint_updata(void)
+{
+  WP* temp=head;
+  word_t result=0;//表达式求值的结果
+  int change_flag=0;//表明是否发生改变
+  bool *suc=malloc(sizeof(bool));
+  //判断是否存在watchpoint
+  if(head!=NULL)
+  {
+    while(1)
+    {
+      result=expr(temp->expr,suc);
+      temp->old_value=temp->new_value;
+      temp->new_value=result;
+      if(temp->old_value!=temp->new_value)
+      {
+        change_flag=1;
+      }
+      temp=temp->next;
+      if(temp==free_)
+      {
+        break;
+      }
+    }
+    if(change_flag==1)
+    {
+      WP* PUT;
+      for(PUT=head;(PUT!=free_)&&(PUT->next!=NULL);PUT=PUT->next)
+      {
+        printf("for %d point,the expr is %s\nthe old data is %d,the new data is %d\n", PUT->NO,PUT->expr,PUT->old_value,PUT->new_value);
+      }
+    }
+    return change_flag;
+  }
+  else//没有监视点的话就返回-1
+  {
+    return -1;
+  }
+  
+}
+//新建一个监视点
 WP* new_wp(void)
 {
 
