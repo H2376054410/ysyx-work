@@ -38,7 +38,7 @@ static struct rule {
   {"0x[0-9a-fA-F]+", TK_HEX},   // 十六进制整数
   {" +", TK_NOTYPE},    // spaces
   {"[0-9]+", TK_DTYPE},    // 十进制整数
-  {"\\$", TK_REG},              // 寄存器名
+  {"\\$.+", TK_REG},              // 寄存器名
   {"\\+", '+'},         // plus
   {"\\-", '-'},         // sub
   {"\\*", '*'},         // mul
@@ -126,17 +126,18 @@ static bool make_token(char *e) {
             // 处理十六进制数
             strcpy(tokens[nr_token].str, match);
           break;  
-          case TK_REG: 
-            snprintf(match, sizeof(match), "%.*s", pmatch.rm_eo - pmatch.rm_so, e + position-pmatch.rm_eo);
-            // 处理寄存器名
-            strcpy(tokens[nr_token].str, match);
-          break;
           case TK_DEREF: 
             snprintf(match, sizeof(match), "%.*s", pmatch.rm_eo - pmatch.rm_so-1, e + position-pmatch.rm_eo+1);
             printf("Found deref: %s\n", match); 
             // 处理指针解引用
             strcpy(tokens[nr_token].str, match);
-          break;              
+          break; 
+          case TK_REG: 
+            snprintf(match, sizeof(match), "%.*s", pmatch.rm_eo - pmatch.rm_so-1, e + position-pmatch.rm_eo+1);
+            printf("Found reg: %s\n", match); 
+            // 处理指针解引用
+            strcpy(tokens[nr_token].str, match);
+          break;                
           default: break;
         }
         nr_token++;
