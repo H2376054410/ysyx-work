@@ -107,7 +107,7 @@ void assert_fail_msg() {
 
 /* Simulate how the CPU works. */
 void cpu_exec(uint64_t n) {
-  if(n<-1)
+  if(n==-2)
   {
     nemu_state.state=NEMU_QUIT;
     statistic();
