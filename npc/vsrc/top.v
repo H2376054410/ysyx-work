@@ -132,6 +132,7 @@ reg reset;
             default: ;
         endcase
     end
+    end
     always @(posedge rst) begin
         option=3'b000;
     end
