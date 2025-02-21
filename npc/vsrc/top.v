@@ -130,9 +130,10 @@ reg reset;
             3'b010:option[1]=1;
             3'b100:option[2]=1;
             default: ;
-        endcase           
-        end
-
+        endcase
+    end
+    always @(posedge rst) begin
+        option=3'b000;
     end
     wire [4:0] extended_A;
     wire [4:0] extended_B;
