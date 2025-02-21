@@ -120,7 +120,7 @@ reg reset;
             default: ;
         endcase
     end
-    always @(rst) begin
+    always @(posedge rst) begin
         option=3'b000;
     end
     wire [4:0] extended_A;
