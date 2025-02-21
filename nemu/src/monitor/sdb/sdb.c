@@ -24,6 +24,8 @@ static int is_batch_mode = false;
 void init_regex();
 void init_wp_pool();
 int add_watchpoint(char *expr);
+void watchpoint_show(void);
+void d_watchpoint(int num);
 /* We use the `readline' library to provide more flexibility to read from stdin. */
 static char* rl_gets() {
   static char *line_read = NULL;
@@ -59,6 +61,7 @@ static int cmd_info(char *args);
 static int cmd_expr(char *args);
 static int cmd_ex(char *args);
 static int cmd_watchpoint(char *args);
+static int cmd_deletewatchpoint(char *args);
 static struct {
   const char *name;
   const char *description;
@@ -72,6 +75,7 @@ static struct {
   { "x", "print memory data", cmd_expr },
   { "p", "get the value", cmd_ex },
   { "w", "get the value", cmd_watchpoint },
+  { "d", "delete the watchpoint", cmd_deletewatchpoint },
   /* TODO: Add more commands */
 
 };
@@ -79,16 +83,24 @@ static struct {
 #define NR_CMD ARRLEN(cmd_table)
 int watchpoint_num[32];
 int p_watchpoint=0;
+static int cmd_deletewatchpoint(char *args)
+{
+  char *arg = strtok(NULL, " ");  
+  assert(arg!=NULL);
+  int dnum=atoi(arg);
+  d_watchpoint(dnum);  
+  return 0;
+}
 static int cmd_watchpoint(char *args)
 {
-  char *arg = strtok(NULL, "");  
+  char *arg = strtok(NULL, " ");  
   watchpoint_num[p_watchpoint]=add_watchpoint(arg);
   return 0;
 }
 static int cmd_ex(char *args)
 { 
   bool *suc=malloc(sizeof(bool));
-  char *arg = strtok(NULL, "");  
+  char *arg = strtok(NULL, " ");  
   printf("%s\n",arg);
   expr(arg,suc);
   free(suc);
@@ -125,6 +137,10 @@ static int cmd_info(char *args)
   {
   printf("into the reg display\n");
   isa_reg_display();
+  }else if(*arg=='w')
+  {
+    printf("the next is the watchpoint message\n");
+    watchpoint_show();
   }
 
   return 0;

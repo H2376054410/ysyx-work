@@ -40,6 +40,32 @@ void init_wp_pool() {
 }
 void try(void)
 {}
+//删除某个监视点
+void d_watchpoint(int num)
+{
+  assert(num>=0&&num<=32);
+  //检测是否为使用中的监视点
+  WP* temp=head;
+  WP* using_watchpoint=NULL;
+  int using_flag=0;//0表示i没有使用
+  for(temp=head;temp!=free_;temp=temp->next)
+  {
+    if(num==temp->NO)
+    {
+      using_flag=1;
+      using_watchpoint=temp;
+      break;
+    }
+  }
+  if(using_flag==1)
+  {
+    printf("free watchpoint %d is successful\n",using_watchpoint->NO);
+    free_wp(using_watchpoint);
+  }else
+  {
+    printf("This watchpoint is not being used\n");
+  } 
+}
 int add_watchpoint(char *expr)
 {
     WP* temp=new_wp();//新建一个监视点
@@ -47,6 +73,14 @@ int add_watchpoint(char *expr)
     strcpy(temp->expr, expr);//拷贝表达式
     printf("watchpoint add expr is %s\n",temp->expr);
     return num;//返回编号
+}
+void watchpoint_show(void)
+{
+  WP* temp=head;
+  for(temp=head;temp!=free_;temp=temp->next)
+  {
+    printf("breakpoint %d is %s,old is %d,new is %d\n",temp->NO,temp->expr,temp->old_value,temp->new_value);
+  }
 }
 //更新监视点的值，在cpu-exec中只需要调用即可,如果有改变的话返回1，没有变化的话返回0
 int watchpoint_updata(void)
