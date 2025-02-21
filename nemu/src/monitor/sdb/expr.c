@@ -112,13 +112,13 @@ static bool make_token(char *e) {
          * to record the token in the array `tokens'. For certain types
          * of tokens, some extra actions should be performed.
          */
-
+        printf("i is %d\n",i);
         switch (rules[i].token_type) {
           case TK_DTYPE:
             // 提取匹配的整数
             snprintf(match, sizeof(match), "%.*s", pmatch.rm_eo - pmatch.rm_so, e + position-pmatch.rm_eo);
             strcpy(tokens[nr_token].str, match);
-            printf("length is %d\n",substr_len);
+            printf("i is %d position is %d,length is %d\n",i,position,substr_len);
           break;
           case TK_HEX: 
             snprintf(match, sizeof(match), "%.*s", pmatch.rm_eo - pmatch.rm_so, e + position-pmatch.rm_eo);

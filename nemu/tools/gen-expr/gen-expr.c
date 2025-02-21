@@ -100,7 +100,7 @@ static struct parentheses find_parentheses(int p)
 {
     struct parentheses pa1;
     pa1.start=p;
-    printf("left is %c\n",buf[p]);
+    // printf("left is %c\n",buf[p]);
     assert(buf[p]=='(');
     int count = 0;
     for (int i = p; ; ++i) {
@@ -123,7 +123,7 @@ int choose(int a)
 }
 char gen_num()
 {
-  return (0x30+(rand()%10));
+  return (0x30+(rand()%9+1));
 }
 char gen_rand_op()
 {
@@ -156,6 +156,12 @@ int main(int argc, char *argv[]) {
 
   int zero_flag=0;
   for (int s = 0; s < loop||zero_flag!=0; s ++) {
+    i=0;
+    fdiv_all=0;
+    out_limit=0;
+    div_flag=0;
+    memset(buf,0,sizeof(buf));
+    memset(div_all,0,sizeof(div_all));
     gen_rand_expr();
     out_limit=i;
     while(out_limit>100)
@@ -169,25 +175,25 @@ int main(int argc, char *argv[]) {
     }
     int find_div_mid=0;
     struct parentheses pa_div;
-    for(int j=0;j<=fdiv_all;j++)
-    {
-      printf("check the %d division op:%c\n",div_all[j],buf[div_all[j]]);
-    }
-    printf("break,and the fdiv_all is %d\n",fdiv_all);
-    printf("buf is %s\n",buf);
+    // for(int j=0;j<=fdiv_all;j++)
+    // {
+    //   printf("check the %d division op:%c\n",div_all[j],buf[div_all[j]]);
+    // }
+    // printf("break,and the fdiv_all is %d\n",fdiv_all);
+    // printf("buf is %s\n",buf);
     while(fdiv_all!=0)
     {
       int pos=div_all[find_div_mid];
-      printf("the data in %d is %c,and the next is %c\n",pos,buf[pos],buf[pos+1]);
+      // printf("the data in %d is %c,and the next is %c\n",pos,buf[pos],buf[pos+1]);
       find_div_mid++;
-      printf("the next data is %c\n",buf[div_all[find_div_mid]]);
+      // printf("the next data is %c\n",buf[div_all[find_div_mid]]);
       pa_div=find_parentheses(pos+1);
       replace(pa_div.start,pa_div.end);
       int getdata=eval(pa_div.start,pa_div.end);
       if(getdata<1)
       {
         zero_flag=1;
-        printf("get the value is 0\n");
+        // printf("get the value is 0\n");
         break;
 
       }
@@ -216,11 +222,11 @@ int main(int argc, char *argv[]) {
     ret = fscanf(fp, "%d", &result);
     pclose(fp);
 
-    printf("%u %s\n", result, buf);
+    printf("%u %s \n", result, buf);
   }
   else
   {
-    printf("------------------------------------------------------------------\n");
+    // printf("------------------------------------------------------------------\n");
   }
   }
 //      printf("the buf is %s\n",buf);
@@ -245,7 +251,7 @@ static int eval(int p,int q)
         // 查找主运算符的位置
         int op_position = find_main_operator(p, q);
         if (op_position == -1) {
-            printf("No operator found\n");
+            // printf("No operator found\n");
             return 0;
         }
         
@@ -261,7 +267,7 @@ static int eval(int p,int q)
             case '*': return val1 * val2;
             case '/': 
                 if (val2 == 0) {
-                    printf("Division by zero\n");
+                    // printf("Division by zero\n");
                     return 0;
                 }
                 return val1 / val2;
