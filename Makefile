@@ -5,7 +5,7 @@ STUNAME = 郝伟翔
 
 TRACER = tracer-ysyx
 GITFLAGS = -q --author='$(TRACER) <tracer@ysyx.org>' --no-verify --allow-empty
-
+export NEMU_HOME=/home/hwx/ysyx-workbench/nemu
 YSYX_HOME = $(NEMU_HOME)/..
 WORK_BRANCH = $(shell git rev-parse --abbrev-ref HEAD)
 WORK_INDEX = $(YSYX_HOME)/.git/index.$(WORK_BRANCH)
@@ -20,7 +20,9 @@ endef
 
 # prototype: git_commit(msg)
 define git_commit
+	@echo "Locking $(LOCK_DIR)"
 	-@flock $(LOCK_DIR) $(MAKE) -C $(YSYX_HOME) .git_commit MSG='$(1)'
+    @echo "Unlocking $(LOCK_DIR)"
 	-@sync $(LOCK_DIR)
 endef
 
@@ -40,5 +42,6 @@ endef
 
 _default:
 	@echo "Please run 'make' under subprojects."
-
+	@echo "YSYX_HOME=$(YSYX_HOME)"
+	@echo "LOCK_DIR=$(LOCK_DIR)"
 .PHONY: .git_commit .clean_index _default
