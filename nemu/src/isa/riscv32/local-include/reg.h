@@ -17,9 +17,12 @@
 #define __RISCV_REG_H__
 
 #include <common.h>
-
+// #define CONFIG_RT_CHECK 1
 static inline int check_reg_idx(int idx) {
   IFDEF(CONFIG_RT_CHECK, assert(idx >= 0 && idx < MUXDEF(CONFIG_RVE, 16, 32)));
+//  printf("the idx is %d\n",idx);
+//  extern const char* regs[];
+//  printf("the name of%d is%s\n",idx,regs[idx]);
   return idx;
 }
 
@@ -27,6 +30,7 @@ static inline int check_reg_idx(int idx) {
 
 static inline const char* reg_name(int idx) {
   extern const char* regs[];
+//  printf("the name of%d is%s\n",idx,regs[check_reg_idx(idx)]);
   return regs[check_reg_idx(idx)];
 }
 

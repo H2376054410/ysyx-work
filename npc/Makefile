@@ -50,9 +50,9 @@ clean:
 .PHONY: default all clean run
 
 # 正确的目标调用函数
-sim:
-	$(call git_commit, "计数调整") # DO NOT REMOVE THIS LINE!!!
-	@echo "commit happened"
+rtl:
+	git add .
+	git commit -m "write my own makefile"
 include ../Makefile
 
 -include ../Makefile

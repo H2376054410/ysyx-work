@@ -31,8 +31,17 @@ static uint64_t g_timer = 0; // unit: us
 static bool g_print_step = false;
 
 void device_update();
-
+int watchpoint_updata(void);
 static void trace_and_difftest(Decode *_this, vaddr_t dnpc) {
+
+#ifdef CONFIG_WATCHPOINT
+int change=watchpoint_updata();
+if(change==1)
+{
+  nemu_state.state=NEMU_STOP;
+}
+#endif
+
 #ifdef CONFIG_ITRACE_COND
   if (ITRACE_COND) { log_write("%s\n", _this->logbuf); }
 #endif
@@ -98,6 +107,12 @@ void assert_fail_msg() {
 
 /* Simulate how the CPU works. */
 void cpu_exec(uint64_t n) {
+  if(n==-2)
+  {
+    nemu_state.state=NEMU_QUIT;
+    statistic();
+    return;
+  }
   g_print_step = (n < MAX_INST_TO_PRINT);
   switch (nemu_state.state) {
     case NEMU_END: case NEMU_ABORT: case NEMU_QUIT:
