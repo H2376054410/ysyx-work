@@ -48,7 +48,12 @@ clean:
 	rm -rf $(BUILD_DIR)
 
 .PHONY: default all clean run
-
+sim:
+	$(call git_commit, "RTL CPU") # DO NOT REMOVE THIS LINE!!!
+	@echo "Write this Makefile by yourself."
+	verilator --cc --top-module cpu vsrc/cpu.v --exe csrc/main.cpp -Wno-fatal -CFLAGS "-std=c++11" --trace
+	make -j -C obj_dir/ -f Vcpu.mk Vcpu
+	./obj_dir/Vcpu +trace
 # 正确的目标调用函数
 rtl:
 	git add .
