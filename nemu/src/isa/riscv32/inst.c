@@ -33,7 +33,7 @@ enum {
 #define immU() do { *imm = SEXT(BITS(i, 31, 12), 20) << 12; } while(0)
 #define immS() do { *imm = (SEXT(BITS(i, 31, 25), 7) << 5) | BITS(i, 11, 7); } while(0)
 #define immB() do { *imm = ((((SEXT(BITS(i, 31, 31), 1) << 12)|(BITS(i, 7, 7) << 11 )|(BITS(i, 30, 25) << 5)|(BITS(i, 11, 8) << 1))<<0)>>0);} while(0)
-#define immJ() do { *imm = ((((SEXT(BITS(i, 31, 31), 1) << 20)|(BITS(i, 19, 12) << 12 )|(BITS(i, 20, 20) << 11)|(BITS(i, 30, 21) << 1))<<11))>>11;} while(0)
+#define immJ() do { *imm = ((SEXT(BITS(i, 31, 31), 1) << 20)|(BITS(i, 19, 12) << 12 )|(BITS(i, 20, 20) << 11)|(BITS(i, 30, 21) << 1));} while(0)
 static void decode_operand(Decode *s, int *rd, word_t *src1, word_t *src2, word_t *imm, int type) {
   uint32_t i = s->isa.inst;
   int rs1 = BITS(i, 19, 15);
@@ -42,7 +42,7 @@ static void decode_operand(Decode *s, int *rd, word_t *src1, word_t *src2, word_
   switch (type) {
     case TYPE_I: src1R();          immI(); break;
     case TYPE_U:                   immU(); break;
-    case TYPE_S: src1R(); src2R(); immS(); break;
+    case TYPE_S: src1R(); src2R(); immS(); printf("the data of src1 is %x\n the data of imm is %x\n",*src1,*imm);break;
     case TYPE_N:                           break;
     case TYPE_R: src1R(); src2R();         break;
     case TYPE_J:                   immJ(); break;
@@ -76,6 +76,7 @@ static int decode_exec(Decode *s) {
   INSTPAT("??????? ????? ????? 010 ????? 00000 11", lw     , I, R(rd) = Mr(src1 + imm, 4));
   INSTPAT("0000000 ????? ????? 000 ????? 01100 11", add    , R, R(rd) = src1+src2); 
   INSTPAT("0100000 ????? ????? 000 ????? 01100 11", sub    , R, R(rd) = src1-src2); 
+  INSTPAT("0000000 ????? ????? 011 ????? 01100 11", sltu   , R, R(rd) = (src1<src2) ? 1 :0); 
   INSTPAT("??????? ????? ????? 000 ????? 11000 11", beq    , B, s->dnpc=(src1==src2) ? (s->pc+imm) : s->dnpc); 
   INSTPAT("??????? ????? ????? 001 ????? 11000 11", bne    , B, s->dnpc=(src1!=src2) ? (s->pc+imm) : s->dnpc); 
   INSTPAT("0000000 00001 00000 000 00000 11100 11", ebreak , N, NEMUTRAP(s->pc, R(10))); // R(10) is $a0
