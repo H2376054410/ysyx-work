@@ -51,7 +51,7 @@ static int cmd_c(char *args) {
 
 
 static int cmd_q(char *args) {
-  cpu_exec(-2);
+  cpu_exec(-1000);
   return -1;
 }
 

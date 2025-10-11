@@ -112,7 +112,7 @@ int watchpoint_updata(void)
       WP* PUT;
       for(PUT=head;(PUT!=free_)&&(PUT->next!=NULL);PUT=PUT->next)
       {
-        printf("for %d point,the expr is %s\nthe old data is %d,the new data is %d\n", PUT->NO,PUT->expr,PUT->old_value,PUT->new_value);
+        printf("for %d point,the expr is %s\nthe old data is %x,the new data is %x\n", PUT->NO,PUT->expr,PUT->old_value,PUT->new_value);
       }
     }
     return change_flag;
