@@ -22,6 +22,7 @@
 #define Mr vaddr_read
 #define Mw vaddr_write
 void print_bits(uint32_t num); 
+void iringbuf_push(word_t pc, uint32_t inst);
 enum {
   TYPE_I, TYPE_U, TYPE_S,
   TYPE_N, TYPE_J, TYPE_R,
@@ -184,6 +185,7 @@ INSTPAT_END();
 
 int isa_exec_once(Decode *s) {
   s->isa.inst = inst_fetch(&s->snpc, 4);
+  IFDEF(CONFIG_ITRACE, iringbuf_push(s->pc, s->isa.inst));
   return decode_exec(s);
 }
 void print_bits(uint32_t num) {
